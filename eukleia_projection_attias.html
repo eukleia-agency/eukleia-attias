@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eukleia · Estimation locative — La Villa du Val Marin, Tourgéville</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; background: #F7F4EF; color: #1B2B4B; min-height: 100vh; }
+  .header { background: #1B2B4B; position: relative; overflow: hidden; }
+  .header-bar { width: 6px; background: #B8975A; position: absolute; left: 0; top: 0; bottom: 0; }
+  .header-inner { padding: 24px 40px 20px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .brand-name { font-family: Georgia, serif; font-size: 20px; letter-spacing: 5px; color: #B8975A; }
+  .brand-sub { font-size: 10px; letter-spacing: 2px; color: #8A9BAB; text-transform: uppercase; }
+  .header-title { font-family: Georgia, serif; font-size: 15px; color: #fff; }
+  .header-subtitle { font-size: 10px; color: #8A9BAB; margin-top: 3px; }
+  .header-meta { text-align: right; }
+  .tabs-wrap { background: #162340; padding: 0 40px; display: flex; gap: 0; border-bottom: 2px solid #B8975A; flex-wrap: wrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .tabs-wrap::-webkit-scrollbar { display: none; }
+  .tab { padding: 13px 20px; font-size: 12px; color: #8A9BAB; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
+  .tab:hover { color: #D4B896; }
+  .tab.active { color: #B8975A; border-bottom-color: #B8975A; font-weight: 600; }
+  .content { padding: 24px 40px 36px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 22px; }
+  .kpi { background: #fff; border-radius: 10px; padding: 16px 20px; border: 1px solid #EDE8DF; position: relative; overflow: hidden; }
+  .kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: #B8975A; }
+  .kpi.accent::before { background: #2D6A4F; }
+  .kpi.dark { background: #1B2B4B; border-color: #1B2B4B; }
+  .kpi.dark::before { background: #B8975A; }
+  .kpi-label { font-size: 11px; color: #8A9BAB; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+  .kpi.dark .kpi-label { color: #D4B896; }
+  .kpi-value { font-family: Georgia, serif; font-size: 24px; color: #1B2B4B; }
+  .kpi.accent .kpi-value { color: #2D6A4F; }
+  .kpi.dark .kpi-value { color: #fff; }
+  .kpi-sub { font-size: 11px; color: #8A9BAB; margin-top: 3px; }
+  .table-wrap { background: #fff; border-radius: 10px; border: 1px solid #EDE8DF; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 600px; }
+  thead tr { background: #1B2B4B; }
+  thead th { padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600; color: #D4B896; letter-spacing: 0.5px; }
+  tbody tr { border-bottom: 1px solid #F0EDE7; transition: background 0.15s; }
+  tbody tr:hover { background: #FDFCFA; }
+  tbody td { padding: 8px 12px; color: #1B2B4B; }
+  .total-row td { background: #1B2B4B !important; color: #fff; font-weight: 600; }
+  .total-row td.gold { color: #B8975A; }
+  .badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+  .badge-basse { background: #E6F1FB; color: #0C447C; }
+  .badge-mi { background: #FAEEDA; color: #633806; }
+  .badge-haute { background: #EAF3DE; color: #27500A; }
+  .badge-tres-haute { background: #F3E8F9; color: #5B2175; }
+  .bar-wrap { display: inline-block; width: 55px; height: 6px; background: #F0EDE7; border-radius: 3px; vertical-align: middle; }
+  .bar-fill { height: 6px; border-radius: 3px; }
+  .occ-label { font-size: 11px; color: #8A9BAB; margin-left: 5px; }
+  .green { color: #2D6A4F; font-weight: 600; }
+  .muted { color: #8A9BAB; }
+  .bold-navy { font-weight: 600; color: #1B2B4B; }
+  .chart-wrap { background: #fff; border-radius: 10px; border: 1px solid #EDE8DF; padding: 24px; margin-bottom: 20px; }
+  .chart-title { font-family: Georgia, serif; font-size: 15px; color: #1B2B4B; margin-bottom: 16px; }
+  .bar-chart { display: flex; flex-direction: column; gap: 8px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-month { width: 28px; font-size: 11px; color: #8A9BAB; text-align: right; flex-shrink: 0; }
+  .bar-tracks { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+  .bar-track { height: 14px; border-radius: 3px; min-width: 2px; transition: width 0.4s; display: flex; align-items: center; padding-left: 5px; }
+  .bar-track .bar-label { font-size: 9px; color: #fff; font-weight: 600; white-space: nowrap; }
+  .legend { display: flex; gap: 18px; margin-bottom: 14px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #5C6B7A; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 2px; }
+  .scenarios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 22px; }
+  .scenario { background: #fff; border-radius: 10px; border: 1px solid #EDE8DF; padding: 18px; position: relative; overflow: hidden; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+  .scenario:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .scenario.selected { border-color: #B8975A; border-width: 2px; box-shadow: 0 4px 16px rgba(184,151,90,0.2); }
+  .scenario::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+  .scenario.plancher::before { background: #8A9BAB; }
+  .scenario.central::before { background: #B8975A; }
+  .scenario.plafond::before { background: #1B2B4B; }
+  .scenario-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+  .scenario.plancher .scenario-label { color: #8A9BAB; }
+  .scenario.central .scenario-label { color: #B8975A; }
+  .scenario.plafond .scenario-label { color: #1B2B4B; }
+  .scenario-value { font-family: Georgia, serif; font-size: 26px; color: #1B2B4B; margin-bottom: 3px; }
+  .scenario-nights { font-size: 12px; color: #5C6B7A; }
+  .scenario-occup { font-size: 11px; color: #8A9BAB; margin-top: 2px; }
+  .advantage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .adv-card { background: #FDFCFA; padding: 14px 16px; border-radius: 8px; border-left: 3px solid #B8975A; }
+  .adv-card-title { font-family: Georgia, serif; font-size: 13px; color: #1B2B4B; margin-bottom: 4px; font-weight: 600; }
+  .adv-card-desc { font-size: 12px; color: #5C6B7A; line-height: 1.5; }
+  .comp-table { font-size: 12px; }
+  .comp-table td { padding: 7px 10px; }
+  .vs-self { color: #A32D2D; font-weight: 600; }
+  .vs-eukleia { color: #2D6A4F; font-weight: 600; }
+  .source { font-size: 10px; color: #8A9BAB; margin-top: 14px; font-style: italic; }
+  .footer { background: #1B2B4B; color: #D4B896; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .footer-brand { font-family: Georgia, serif; font-size: 13px; letter-spacing: 3px; }
+  .footer-contact { font-size: 11px; color: #8A9BAB; }
+  .hidden { display: none; }
+  @media (max-width: 640px) {
+    .header-inner { padding: 16px 18px 14px 22px; }
+    .header-meta { text-align: left; width: 100%; }
+    .tabs-wrap { padding: 0 12px; }
+    .content { padding: 18px 14px 24px; }
+    .kpi-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+    .kpi-value { font-size: 19px; }
+    table { min-width: 520px; font-size: 11px; }
+    .scenarios-grid { grid-template-columns: 1fr; }
+    .chart-wrap { padding: 14px 10px; }
+    .footer { padding: 12px 14px; flex-direction: column; align-items: flex-start; }
+    .tab { padding: 10px 12px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-bar"></div>
+  <div class="header-inner">
+    <div><div class="brand-name">EUKLEIA</div><div class="brand-sub">Conciergerie Premium · Deauville / Trouville</div></div>
+    <div class="header-meta">
+      <div class="header-title">Estimation locative — La Villa du Val Marin</div>
+      <div class="header-subtitle">M. Ilane Attias · 434 chemin du Val Marin, 14800 Tourgéville · 220 m² · 10 voyageurs · Piscine chauffée · 5 chambres</div>
+    </div>
+  </div>
+</div>
+<div class="tabs-wrap">
+  <div class="tab active" onclick="showTab('marche', this)">📊 Marché</div>
+  <div class="tab" onclick="showTab('tarification', this)">💰 Tarification</div>
+  <div class="tab" onclick="showTab('eukleia', this)">🚀 Avec Eukleia</div>
+  <div class="tab" onclick="showTab('scenarios', this)">🎯 Scénarios</div>
+  <div class="tab" onclick="showTab('commission', this)">📋 Commission</div>
+</div>
+<div class="content">
+
+<!-- TAB 1 — MARCHÉ -->
+<div id="tab-marche">
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">Prix moyen observé</div><div class="kpi-value">~680 €</div><div class="kpi-sub">Villas 5-6 ch. avec piscine · Tourgéville / hauteurs Deauville</div></div>
+    <div class="kpi"><div class="kpi-label">Fourchette haute saison</div><div class="kpi-value">790 – 1 160 €</div><div class="kpi-sub">Juillet-août — villas premium observées</div></div>
+    <div class="kpi"><div class="kpi-label">Mi-saison observée</div><div class="kpi-value">450 – 635 €</div><div class="kpi-sub">Avril à juin / septembre — villas équivalentes</div></div>
+    <div class="kpi"><div class="kpi-label">Basse saison</div><div class="kpi-value">390 – 470 €</div><div class="kpi-sub">Novembre à mars (piscine fermée)</div></div>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-title">Comparables directs — Villas premium 5-6 chambres avec piscine, Tourgéville / hauteurs Deauville</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Bien</th><th>Surface</th><th>Cap.</th><th>Note</th><th>Tarif observé</th><th>Positionnement vs votre bien</th></tr></thead>
+        <tbody>
+          <tr><td class="bold-navy">Villa Tourgéville "Les Clefs du Pays d'Auge"</td><td>250 m²</td><td>10-12</td><td>4,83 ★ (12 avis)</td><td class="bold-navy">790 €/nuit (oct)</td><td class="muted">Comparable direct · jardin 2 000 m² (10× plus petit) ✓</td></tr>
+          <tr><td class="bold-navy">Villa hauteur Deauville vue mer/campagne</td><td>5 ch</td><td>—</td><td>4,94 ★</td><td class="bold-navy">450 €/nuit (mai)</td><td class="muted">Même segment, vue mer équivalente</td></tr>
+          <tr><td class="bold-navy">Chaumière de charme avec piscine</td><td>—</td><td>—</td><td>—</td><td class="bold-navy">635 €/nuit (juin)</td><td class="muted">Charme, piscine intérieure chauffée</td></tr>
+          <tr><td class="bold-navy">Sotheby's — Maison 180 m² piscine chauffée</td><td>180 m²</td><td>—</td><td>—</td><td class="bold-navy">~570 €/nuit</td><td class="muted">Jardin 2 200 m² (10× plus petit)</td></tr>
+          <tr><td class="bold-navy">Sotheby's — Maison 150 m² domaine privé</td><td>150 m²</td><td>—</td><td>—</td><td class="bold-navy">~860 €/nuit</td><td class="muted">Domaine sécurisé, prestation premium</td></tr>
+          <tr><td class="bold-navy">Villanovo — Collection villas luxe Deauville</td><td>—</td><td>—</td><td>—</td><td class="bold-navy">446 – 1 160 €/nuit</td><td class="muted">Segment ultra-premium (agence)</td></tr>
+          <tr style="background:#FDF8EE"><td class="bold-navy" style="color:#B8975A">Votre Villa du Val Marin</td><td class="bold-navy">220 m²</td><td class="bold-navy">10</td><td class="bold-navy">4,75 ★ (4 avis)</td><td class="bold-navy" style="color:#B8975A">Positionnement cible : 390 – 1 050 €</td><td class="bold-navy">Jardin 2 ha · home cinéma · salle de sport · bar · piano ✓</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-title">Vos avantages concurrentiels — uniques sur le segment Tourgéville</div>
+    <div class="advantage-grid">
+      <div class="adv-card"><div class="adv-card-title">Jardin de 2 hectares — rareté majeure</div><div class="adv-card-desc">10× plus grand que les comparables premium de Tourgéville. Aucun vis-à-vis, aucune mitoyenneté, calme absolu. Sur le segment "villas grand jardin", votre bien n'a quasiment pas de concurrent.</div></div>
+      <div class="adv-card"><div class="adv-card-title">Équipements lifestyle premium</div><div class="adv-card-desc">Home cinéma, salle de sport équipée, bar à cocktail, piano, billard, babyfoot, baignoire. Un produit pensé comme un "resort familial privatif", rare sur la zone.</div></div>
+      <div class="adv-card"><div class="adv-card-title">Piscine chauffée 6×4 · terrasse barbecue</div><div class="adv-card-desc">Piscine chauffée de mai à septembre, terrasse aménagée avec mobilier extérieur et barbecue. Atout décisif en haute saison sur ce segment.</div></div>
+      <div class="adv-card"><div class="adv-card-title">Proximité golf Barrière + hippodromes</div><div class="adv-card-desc">À pied du golf Barrière de Deauville et de l'hippodrome de Clairefontaine. Cible additionnelle : clientèle sportive, événementielle (Yearling Sale, Grand Prix, Festival du Cinéma).</div></div>
+      <div class="adv-card"><div class="adv-card-title">Cuisine et équipement complets</div><div class="adv-card-desc">Cuisine tout équipée, lave-vaisselle, lave-linge, sèche-linge, deux parkings (extérieur + souterrain). Standards d'accueil très haut de gamme.</div></div>
+      <div class="adv-card"><div class="adv-card-title">Récemment rénové · 10 couchages confortables</div><div class="adv-card-desc">4 lits doubles + 3 lits simples, 3 salles de bain, capacité 10 voyageurs. Format idéal famille élargie ou groupe d'amis — segment le plus rémunérateur.</div></div>
+    </div>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-title">Diagnostic : pourquoi votre bien est sous-exploité aujourd'hui</div>
+    <div class="advantage-grid">
+      <div class="adv-card" style="border-left-color:#A32D2D"><div class="adv-card-title" style="color:#A32D2D">Historique d'avis très limité</div><div class="adv-card-desc">4 avis en 7 ans sur Airbnb — signal faible dans l'algorithme. Sur le segment premium, le capital d'avis est décisif. Un bien comparable de Tourgéville affiche 12 avis sur la même période (3× plus).</div></div>
+      <div class="adv-card" style="border-left-color:#A32D2D"><div class="adv-card-title" style="color:#A32D2D">Listing désoptimisé</div><div class="adv-card-desc">Descriptif brouillon, équipements premium non mis en valeur, incohérences (10 vs 11 voyageurs, piscine "chauffée toute l'année" puis "non chauffée oct-avril"). L'annonce actuelle ne reflète pas le standing réel du bien.</div></div>
+      <div class="adv-card" style="border-left-color:#A32D2D"><div class="adv-card-title" style="color:#A32D2D">Règles d'arrivée non standards</div><div class="adv-card-desc">Check-in 12h-22h et check-out 14h tardif : amplitude trop large et rotation impossible en haute saison, ce qui bloque mécaniquement des réservations consécutives.</div></div>
+      <div class="adv-card" style="border-left-color:#A32D2D"><div class="adv-card-title" style="color:#A32D2D">Note propreté 4,5/5 — frein au segment premium</div><div class="adv-card-desc">Pour un bien de ce standing, la propreté doit atteindre 4,8-5,0. Une note à 4,5 crée une friction visible dans la conversion sur les biens à 600+ €/nuit.</div></div>
+      <div class="adv-card" style="border-left-color:#A32D2D"><div class="adv-card-title" style="color:#A32D2D">Diffusion limitée</div><div class="adv-card-desc">Présence Airbnb uniquement. Absence de Booking.com et Abritel : vous passez à côté de ~30 à 40 % de demande internationale et grands groupes familiaux.</div></div>
+      <div class="adv-card" style="border-left-color:#B8975A"><div class="adv-card-title" style="color:#B8975A">Potentiel de revalorisation majeur</div><div class="adv-card-desc">Le bien a tout pour tripler son CA actuel. Les leviers sont identifiés et corrigeables en 2-3 semaines : listing, diffusion, tarification dynamique, standards de propreté.</div></div>
+    </div>
+  </div>
+  <p class="source">Sources : Airbnb (relevés avril 2026), Abritel, Sotheby's International Realty, Villanovo, Booking.com. Observations sur villas 4-6 chambres avec piscine chauffée, Tourgéville et hauteurs de Deauville. Données moyennées, non contractuelles.</p>
+</div>
+
+<!-- TAB 2 — TARIFICATION -->
+<div id="tab-tarification" class="hidden">
+  <div class="chart-wrap">
+    <div class="chart-title">Grille tarifaire Eukleia — Calibrée sur les villas premium Tourgéville</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Saison</th><th>Période</th><th>Tarif / nuit</th><th>Min. séjour</th><th>Marché observé</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-basse">Basse</span></td><td>Nov / Janv / Mars hors fêtes (piscine fermée)</td><td class="bold-navy">390 – 410 €</td><td>2 nuits</td><td class="muted">Marché réduit</td></tr>
+          <tr><td><span class="badge badge-basse">Basse +</span></td><td>Déc hors Noël/NY</td><td class="bold-navy">430 €</td><td>2 nuits</td><td class="muted">—</td></tr>
+          <tr><td><span class="badge badge-mi">Vac. hiver</span></td><td>14 fév – 1 mars</td><td class="bold-navy">470 €</td><td>2 nuits</td><td class="muted">—</td></tr>
+          <tr><td><span class="badge badge-mi">Mi-saison</span></td><td>Avr, Mai hp, Sep hp, Oct hp</td><td class="bold-navy">560 €</td><td>2 nuits</td><td>450 – 635 €</td></tr>
+          <tr><td><span class="badge badge-mi">Toussaint</span></td><td>17 oct – 2 nov</td><td class="bold-navy">590 €</td><td>2 nuits</td><td class="muted">—</td></tr>
+          <tr><td><span class="badge badge-mi">Ponts mai</span></td><td>1, 8, 14-17, 23-25 mai</td><td class="bold-navy">650 €</td><td>2 nuits</td><td class="muted">—</td></tr>
+          <tr><td><span class="badge badge-haute">Juin</span></td><td>Juin complet</td><td class="bold-navy">720 €</td><td>2 nuits</td><td>~720 €</td></tr>
+          <tr><td><span class="badge badge-haute">Noël</span></td><td>19 – 25 déc</td><td class="bold-navy">720 €</td><td>3 nuits</td><td class="muted">—</td></tr>
+          <tr><td><span class="badge badge-haute">Festival Cinéma</span></td><td>4-13 septembre</td><td class="bold-navy">800 €</td><td>3 nuits</td><td class="muted">Pic de demande</td></tr>
+          <tr><td><span class="badge badge-haute">Nouvel An</span></td><td>26 déc – 4 jan</td><td class="bold-navy">830 €</td><td>4 nuits</td><td class="muted">—</td></tr>
+          <tr><td><span class="badge badge-tres-haute">Juillet</span></td><td>Juillet complet</td><td class="bold-navy">850 €</td><td>3 nuits</td><td>790 – 1 160 €</td></tr>
+          <tr><td><span class="badge badge-tres-haute">Août début</span></td><td>1 – 14 août</td><td class="bold-navy">900 €</td><td>5 nuits</td><td>790 – 1 160 €</td></tr>
+          <tr><td><span class="badge badge-tres-haute">Août pic</span></td><td>15 – 31 août</td><td class="bold-navy">1 050 €</td><td>5 nuits</td><td>~1 000 €+</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="source" style="margin-top:10px">Grille mensuelle pondérée entre ces périodes et les week-ends (+50-100 € en moyenne saison). Tarification intelligente des plateformes désactivée — contrôle manuel total. Réductions séjours longs (≥ 7 nuits) appliquées en basse et moyenne saison.</p>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">Ménage / séjour</div><div class="kpi-value">à confirmer</div><div class="kpi-sub">Forfait fixe, à la charge du voyageur</div></div>
+    <div class="kpi"><div class="kpi-label">Linge & consommables</div><div class="kpi-value">à confirmer</div><div class="kpi-sub">10 couchages — linge lit + bain</div></div>
+    <div class="kpi"><div class="kpi-label">Caution</div><div class="kpi-value">1 500 €</div><div class="kpi-sub">Paramétrée sur chaque plateforme</div></div>
+    <div class="kpi"><div class="kpi-label">Durée min. variable</div><div class="kpi-value">2 à 5 n.</div><div class="kpi-sub">Adaptée à la saison (voir grille)</div></div>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-title">Diagnostic de la tarification actuelle vs Eukleia</div>
+    <div class="table-wrap">
+      <table class="comp-table">
+        <thead><tr><th>Indicateur</th><th>Gestion actuelle</th><th>Avec Eukleia</th><th>Écart</th></tr></thead>
+        <tbody>
+          <tr><td class="bold-navy">Fréquence de location</td><td class="vs-self">Très faible (4 avis / 7 ans)</td><td class="vs-eukleia">Objectif ~130-150 nuits/an</td><td class="green">×3 à ×4</td></tr>
+          <tr><td class="bold-navy">Tarification</td><td class="vs-self">Probablement figée / auto</td><td class="vs-eukleia">Dynamique, 13 segments saisonniers</td><td class="green">Revenu optimisé mois par mois</td></tr>
+          <tr><td class="bold-navy">Diffusion</td><td class="vs-self">Airbnb uniquement</td><td class="vs-eukleia">Airbnb + Booking + Abritel</td><td class="green">+30 à 40 % de visibilité</td></tr>
+          <tr><td class="bold-navy">Durée minimale</td><td class="vs-self">Non adaptée</td><td class="vs-eukleia">Variable 2/3/5 nuits selon saison</td><td class="green">Rotation et CA optimisés</td></tr>
+          <tr><td class="bold-navy">Check-in / check-out</td><td class="vs-self">12h-22h / 14h (trop large)</td><td class="vs-eukleia">16h / 11h (standards pro)</td><td class="green">Rotations consécutives possibles</td></tr>
+          <tr><td class="bold-navy">Listing et photos</td><td class="vs-self">Descriptif brouillon, capacité incohérente</td><td class="vs-eukleia">Listing premium optimisé SEO + shooting pro</td><td class="green">Conversion augmentée</td></tr>
+          <tr><td class="bold-navy">Standards propreté</td><td class="vs-self">4,5/5</td><td class="vs-eukleia">Objectif 4,8-5,0</td><td class="green">Alignement segment premium</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3 — AVEC EUKLEIA -->
+<div id="tab-eukleia" class="hidden">
+  <div class="kpi-grid">
+    <div class="kpi accent"><div class="kpi-label">Nuits louées / an</div><div class="kpi-value" id="euk-nights">—</div><div class="kpi-sub">Scénario central · calendrier 12 mois</div></div>
+    <div class="kpi accent"><div class="kpi-label">Taux d'occupation</div><div class="kpi-value" id="euk-occ">—</div><div class="kpi-sub">Pondéré saisonnier (piscine fermée hiver)</div></div>
+    <div class="kpi dark"><div class="kpi-label">Revenus bruts estimés</div><div class="kpi-value" id="euk-total-val">—</div><div class="kpi-sub">Scénario central · avant commission</div></div>
+  </div>
+  <div class="table-wrap"><table><thead><tr><th>Mois</th><th>Saison</th><th>Tarif/nuit</th><th>Nuits</th><th>Occupation</th><th>Revenus</th></tr></thead><tbody id="tbody-eukleia"></tbody></table></div>
+  <p class="source">Projection Eukleia : diffusion Airbnb + Booking + Abritel · durée min. variable · tarification dynamique 390-1 050 €/nuit. Données marché : villas premium Tourgéville / Deauville, relevés avril 2026. Projection établie sur 12 mois glissants — mai 2026 à avril 2027.</p>
+</div>
+
+<!-- TAB 4 — SCÉNARIOS -->
+<div id="tab-scenarios" class="hidden">
+  <div class="scenarios-grid">
+    <div class="scenario plancher" onclick="selectScenario('plancher')"><div class="scenario-label">Scénario plancher</div><div class="scenario-value" id="sc-plan-val">—</div><div class="scenario-nights" id="sc-plan-nights">—</div><div class="scenario-occup" id="sc-plan-occ">—</div></div>
+    <div class="scenario central selected" onclick="selectScenario('central')"><div class="scenario-label">✓ Estimation centrale</div><div class="scenario-value" id="sc-cent-val">—</div><div class="scenario-nights" id="sc-cent-nights">—</div><div class="scenario-occup" id="sc-cent-occ">—</div></div>
+    <div class="scenario plafond" onclick="selectScenario('plafond')"><div class="scenario-label">Scénario plafond</div><div class="scenario-value" id="sc-plaf-val">—</div><div class="scenario-nights" id="sc-plaf-nights">—</div><div class="scenario-occup" id="sc-plaf-occ">—</div></div>
+  </div>
+  <div class="table-wrap"><table><thead><tr><th>Mois</th><th>Saison</th><th>Tarif/nuit</th><th>Nuits</th><th>Occupation</th><th>Revenus</th></tr></thead><tbody id="tbody-scenarios"></tbody></table></div>
+  <div class="chart-wrap" style="margin-top:18px"><div class="chart-title" id="sc-chart-title">Revenus mensuels</div><div class="bar-chart" id="bar-chart-scenario"></div></div>
+  <p class="source">Tous les scénarios sont établis avant commission Eukleia et charges. Commission calculée sur le CA brut hébergement (prix de location encaissé). Projection mai 2026 – avril 2027.</p>
+</div>
+
+<!-- TAB 5 — COMMISSION -->
+<div id="tab-commission" class="hidden">
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">Palier 1</div><div class="kpi-value" style="color:#2D6A4F">15 % HT</div><div class="kpi-sub">CA mensuel brut &lt; revenus du scénario plancher</div></div>
+    <div class="kpi"><div class="kpi-label">Palier 2</div><div class="kpi-value" style="color:#B8975A">20 % HT</div><div class="kpi-sub">Revenus plancher ≤ CA brut &lt; revenus plafond</div></div>
+    <div class="kpi dark"><div class="kpi-label">Palier 3</div><div class="kpi-value">25 % HT</div><div class="kpi-sub">CA mensuel brut ≥ revenus du scénario plafond</div></div>
+  </div>
+
+  <div class="scenarios-grid" style="margin-bottom:14px">
+    <div class="scenario plancher" id="comm-sc-plancher" onclick="selectCommScenario('plancher')"><div class="scenario-label">Plancher</div><div class="scenario-value" id="comm-net-plan">—</div><div class="scenario-nights">Net propriétaire / an</div></div>
+    <div class="scenario central selected" id="comm-sc-central" onclick="selectCommScenario('central')"><div class="scenario-label">✓ Central</div><div class="scenario-value" id="comm-net-cent">—</div><div class="scenario-nights">Net propriétaire / an</div></div>
+    <div class="scenario plafond" id="comm-sc-plafond" onclick="selectCommScenario('plafond')"><div class="scenario-label">Plafond</div><div class="scenario-value" id="comm-net-plaf">—</div><div class="scenario-nights">Net propriétaire / an</div></div>
+  </div>
+
+  <div class="kpi-grid" style="margin-bottom:18px">
+    <div class="kpi"><div class="kpi-label">Revenus bruts (hébergement)</div><div class="kpi-value" id="comm-kpi-brut">—</div><div class="kpi-sub">Prix de location × nuits</div></div>
+    <div class="kpi" style="border-left:3px solid #B8975A"><div class="kpi-label">Commission Eukleia</div><div class="kpi-value" id="comm-kpi-euk" style="color:#B8975A">—</div><div class="kpi-sub">15/20/25 % HT sur le CA net plateforme</div></div>
+    <div class="kpi" style="border-left:3px solid #A32D2D"><div class="kpi-label">Commission plateforme (~15 %)</div><div class="kpi-value" id="comm-kpi-plat" style="color:#A32D2D">—</div><div class="kpi-sub">Airbnb ~15 % · Booking 15-18 % · Abritel ~8 %</div></div>
+    <div class="kpi accent"><div class="kpi-label">Net propriétaire</div><div class="kpi-value" id="comm-kpi-net">—</div><div class="kpi-sub">Ce que vous percevez réellement</div></div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Comment fonctionne la commission évolutive</div>
+    <div class="advantage-grid">
+      <div class="adv-card"><div class="adv-card-title">Ordre de calcul</div><div class="adv-card-desc">1. La commission plateforme (Airbnb/Booking/Abritel, ~15 %) est prélevée à la source. 2. La commission Eukleia 15/20/25 % HT s'applique ensuite sur le CA net plateforme effectivement encaissé.</div></div>
+      <div class="adv-card"><div class="adv-card-title">Taux global, pas par tranches</div><div class="adv-card-desc">Le palier Eukleia est déterminé chaque mois en comparant le CA brut hébergement du mois aux seuils mensuels. Le taux retenu s'applique globalement à la totalité du net plateforme du mois.</div></div>
+      <div class="adv-card"><div class="adv-card-title">Vous payez moins en basse saison</div><div class="adv-card-desc">En basse saison, le CA est naturellement plus bas → palier 15 %. Eukleia partage le risque saisonnier avec vous.</div></div>
+      <div class="adv-card"><div class="adv-card-title">Transparence totale</div><div class="adv-card-desc">Reporting mensuel détaillé : commission plateforme, net plateforme, palier Eukleia atteint, commission Eukleia, net propriétaire. Frais de préparation facturés séparément au voyageur.</div></div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title" id="comm-table-title">Détail mensuel — Scénario central</div>
+    <div class="table-wrap"><table><thead><tr><th>Mois</th><th>Rev. bruts</th><th>Comm. plateforme</th><th>Comm. Eukleia</th><th>Taux Eukleia</th><th style="color:#2D6A4F;font-weight:700">Net propriétaire</th></tr></thead><tbody id="tbody-commission"></tbody></table></div>
+  </div>
+  <p class="source">Ordre de calcul : (1) la commission plateforme (Airbnb ~15 %, Booking 15-18 %, Abritel ~8 %) est prélevée à la source sur le CA brut hébergement ; (2) la commission Eukleia 15/20/25 % HT s'applique ensuite sur le CA net plateforme encaissé par le Mandant. Frais de préparation (ménage + linge) facturés séparément au voyageur.</p>
+</div>
+
+</div>
+<div class="footer">
+  <div class="footer-brand">EUKLEIA</div>
+  <div class="footer-contact">06 51 66 94 85 · chahine@eukleia.agency · 21 rue Louvel et Brière, 14800 Touques · Document non contractuel — Données marché avril 2026</div>
+</div>
+
+<script>
+const MONTHS = [
+  { m:"Mai", tarif:580, days:31, saison:"Moyenne",      plan_n:8,  cent_n:13, plaf_n:18 },
+  { m:"Jun", tarif:720, days:30, saison:"Haute",        plan_n:8,  cent_n:14, plaf_n:20 },
+  { m:"Jul", tarif:850, days:31, saison:"Très haute",   plan_n:15, cent_n:22, plaf_n:27 },
+  { m:"Aoû", tarif:980, days:31, saison:"Très haute",   plan_n:18, cent_n:25, plaf_n:29 },
+  { m:"Sep", tarif:630, days:30, saison:"Moyenne",      plan_n:8,  cent_n:13, plaf_n:18 },
+  { m:"Oct", tarif:570, days:31, saison:"Moyenne",      plan_n:6,  cent_n:10, plaf_n:14 },
+  { m:"Nov", tarif:390, days:30, saison:"Basse",        plan_n:3,  cent_n:5,  plaf_n:8  },
+  { m:"Déc", tarif:550, days:31, saison:"Moyenne",      plan_n:6,  cent_n:10, plaf_n:14 },
+  { m:"Jan", tarif:450, days:31, saison:"Basse",        plan_n:4,  cent_n:7,  plaf_n:10 },
+  { m:"Fév", tarif:430, days:28, saison:"Moyenne",      plan_n:4,  cent_n:8,  plaf_n:12 },
+  { m:"Mar", tarif:410, days:31, saison:"Basse",        plan_n:3,  cent_n:6,  plaf_n:9  },
+  { m:"Avr", tarif:580, days:30, saison:"Moyenne",      plan_n:6,  cent_n:11, plaf_n:16 },
+];
+
+MONTHS.forEach(m => {
+  m.plan_rev = m.plan_n * m.tarif;
+  m.cent_rev = m.cent_n * m.tarif;
+  m.plaf_rev = m.plaf_n * m.tarif;
+});
+
+const totalDays = MONTHS.reduce((s,m) => s+m.days, 0);
+function sumField(f) { return MONTHS.reduce((s,m) => s+m[f], 0); }
+
+function fmt(n) { return n.toLocaleString('fr-FR'); }
+function badgeClass(s) {
+  if (s === 'Haute') return 'badge-haute';
+  if (s === 'Très haute') return 'badge-tres-haute';
+  if (s === 'Basse') return 'badge-basse';
+  return 'badge-mi';
+}
+
+function showTab(id, el) {
+  document.querySelectorAll('.content > div').forEach(d => d.classList.add('hidden'));
+  document.getElementById('tab-' + id).classList.remove('hidden');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// TAB 3 — AVEC EUKLEIA
+function renderEukleia() {
+  const tb = document.getElementById('tbody-eukleia');
+  let html = '';
+  MONTHS.forEach(m => {
+    const occ = Math.round(m.cent_n / m.days * 100);
+    html += '<tr><td>'+m.m+'</td><td><span class="badge '+badgeClass(m.saison)+'">'+m.saison+'</span></td><td class="bold-navy">'+m.tarif+' €</td><td>'+m.cent_n+'</td><td><div class="bar-wrap"><div class="bar-fill" style="width:'+occ+'%;background:#2D6A4F"></div></div><span class="occ-label">'+occ+'%</span></td><td class="green">'+fmt(m.cent_rev)+' €</td></tr>';
+  });
+  const totN = sumField('cent_n'), totR = sumField('cent_rev');
+  html += '<tr class="total-row"><td>TOTAL</td><td></td><td></td><td class="gold">'+totN+' n.</td><td class="gold">'+Math.round(totN/totalDays*100)+'%</td><td class="gold">'+fmt(totR)+' €</td></tr>';
+  tb.innerHTML = html;
+  document.getElementById('euk-nights').textContent = totN;
+  document.getElementById('euk-occ').textContent = Math.round(totN/totalDays*100) + ' %';
+  document.getElementById('euk-total-val').textContent = fmt(totR) + ' €';
+}
+
+// TAB 4 — SCÉNARIOS
+let currentScenario = 'central';
+function selectScenario(sc) {
+  currentScenario = sc;
+  document.querySelectorAll('#tab-scenarios .scenario').forEach(s => s.classList.remove('selected'));
+  document.querySelector('#tab-scenarios .scenario.' + sc).classList.add('selected');
+  renderScenarios();
+}
+
+function renderScenarios() {
+  const sc = currentScenario;
+  const nKey = sc === 'plancher' ? 'plan_n' : sc === 'central' ? 'cent_n' : 'plaf_n';
+  const rKey = sc === 'plancher' ? 'plan_rev' : sc === 'central' ? 'cent_rev' : 'plaf_rev';
+  const totN = sumField(nKey), totR = sumField(rKey);
+  const maxRev = Math.max(...MONTHS.map(m => m.plaf_rev));
+
+  ['plan','cent','plaf'].forEach(p => {
+    const nk = p === 'plan' ? 'plan_n' : p === 'cent' ? 'cent_n' : 'plaf_n';
+    const rk = p === 'plan' ? 'plan_rev' : p === 'cent' ? 'cent_rev' : 'plaf_rev';
+    const tn = sumField(nk), tr = sumField(rk);
+    document.getElementById('sc-'+p+'-val').textContent = fmt(tr) + ' €';
+    document.getElementById('sc-'+p+'-nights').textContent = tn + ' nuits';
+    document.getElementById('sc-'+p+'-occ').textContent = Math.round(tn/totalDays*100) + "% d'occupation";
+  });
+
+  const tb = document.getElementById('tbody-scenarios');
+  let html = '';
+  MONTHS.forEach(m => {
+    const n = m[nKey], r = m[rKey];
+    const occ = Math.round(n / m.days * 100);
+    html += '<tr><td>'+m.m+'</td><td><span class="badge '+badgeClass(m.saison)+'">'+m.saison+'</span></td><td class="bold-navy">'+m.tarif+' €</td><td>'+n+'</td><td><div class="bar-wrap"><div class="bar-fill" style="width:'+occ+'%;background:#B8975A"></div></div><span class="occ-label">'+occ+'%</span></td><td class="bold-navy">'+fmt(r)+' €</td></tr>';
+  });
+  html += '<tr class="total-row"><td>TOTAL</td><td></td><td></td><td class="gold">'+totN+' n.</td><td class="gold">'+Math.round(totN/totalDays*100)+'%</td><td class="gold">'+fmt(totR)+' €</td></tr>';
+  tb.innerHTML = html;
+
+  const scLabel = sc === 'plancher' ? 'Plancher' : sc === 'central' ? 'Central' : 'Plafond';
+  const scColor = sc === 'plancher' ? '#8A9BAB' : sc === 'central' ? '#B8975A' : '#1B2B4B';
+  document.getElementById('sc-chart-title').textContent = 'Revenus mensuels — Scénario ' + scLabel;
+  const chartEl = document.getElementById('bar-chart-scenario');
+  let chartHtml = '';
+  MONTHS.forEach(m => {
+    const r = m[rKey];
+    const w = Math.max(2, r / maxRev * 100);
+    chartHtml += '<div class="bar-row"><div class="bar-month">'+m.m+'</div><div class="bar-tracks"><div class="bar-track" style="width:'+w+'%;background:'+scColor+'"><span class="bar-label">'+(r > 2000 ? fmt(r)+' €' : '')+'</span></div></div></div>';
+  });
+  chartEl.innerHTML = chartHtml;
+}
+
+// TAB 5 — COMMISSION
+const PLATFORM_RATE = 0.15;
+let currentCommScenario = 'central';
+
+function selectCommScenario(sc) {
+  currentCommScenario = sc;
+  document.querySelectorAll('#tab-commission .scenario').forEach(s => s.classList.remove('selected'));
+  document.getElementById('comm-sc-' + sc).classList.add('selected');
+  renderCommission();
+}
+
+function renderCommission() {
+  const sc = currentCommScenario;
+  const nKey = sc === 'plancher' ? 'plan_n' : sc === 'central' ? 'cent_n' : 'plaf_n';
+  const rKey = sc === 'plancher' ? 'plan_rev' : sc === 'central' ? 'cent_rev' : 'plaf_rev';
+  const scLabel = sc === 'plancher' ? 'Plancher' : sc === 'central' ? 'Central' : 'Plafond';
+
+  document.getElementById('comm-table-title').textContent = 'Détail mensuel — Scénario ' + scLabel;
+
+  const allNets = {};
+  ['plancher','central','plafond'].forEach(s => {
+    const rk = s === 'plancher' ? 'plan_rev' : s === 'central' ? 'cent_rev' : 'plaf_rev';
+    let sNet = 0;
+    MONTHS.forEach(m => {
+      const brut = m[rk];
+      const planSeuil = m.plan_rev;
+      const plafSeuil = m.plaf_rev;
+      // Étape 1 : commission plateforme sur le brut
+      const commPlat = Math.round(brut * PLATFORM_RATE);
+      const netPlat = brut - commPlat;
+      // Étape 2 : palier Eukleia déterminé par le CA brut hébergement
+      let taux;
+      if (brut < planSeuil) taux = 0.15;
+      else if (brut >= plafSeuil) taux = 0.25;
+      else taux = 0.20;
+      // Commission Eukleia sur le net plateforme
+      const commEuk = Math.round(netPlat * taux);
+      sNet += (netPlat - commEuk);
+    });
+    allNets[s] = sNet;
+  });
+
+  document.getElementById('comm-net-plan').textContent = fmt(allNets.plancher) + ' €';
+  document.getElementById('comm-net-cent').textContent = fmt(allNets.central) + ' €';
+  document.getElementById('comm-net-plaf').textContent = fmt(allNets.plafond) + ' €';
+
+  const tb = document.getElementById('tbody-commission');
+  let html = '';
+  let totalBrut = 0, totalCommEuk = 0, totalCommPlat = 0, totalNet = 0;
+
+  MONTHS.forEach(m => {
+    const brut = m[rKey];
+    const planSeuil = m.plan_rev;
+    const plafSeuil = m.plaf_rev;
+    // Étape 1 : commission plateforme
+    const commPlat = Math.round(brut * PLATFORM_RATE);
+    const netPlat = brut - commPlat;
+    // Étape 2 : palier Eukleia
+    let taux, tauxLabel;
+    if (brut < planSeuil) { taux = 0.15; tauxLabel = '15%'; }
+    else if (brut >= plafSeuil) { taux = 0.25; tauxLabel = '25%'; }
+    else { taux = 0.20; tauxLabel = '20%'; }
+    const commEuk = Math.round(netPlat * taux);
+    const net = netPlat - commEuk;
+    totalBrut += brut; totalCommEuk += commEuk; totalCommPlat += commPlat; totalNet += net;
+    html += '<tr><td>'+m.m+'</td><td class="bold-navy">'+fmt(brut)+' €</td><td class="muted" style="color:#A32D2D">'+fmt(commPlat)+' €</td><td class="muted">'+fmt(commEuk)+' €</td><td>'+tauxLabel+'</td><td class="green" style="font-weight:700">'+fmt(net)+' €</td></tr>';
+  });
+  html += '<tr class="total-row"><td>TOTAL</td><td class="gold">'+fmt(totalBrut)+' €</td><td>'+fmt(totalCommPlat)+' €</td><td>'+fmt(totalCommEuk)+' €</td><td></td><td class="gold" style="font-size:14px">'+fmt(totalNet)+' €</td></tr>';
+  tb.innerHTML = html;
+
+  document.getElementById('comm-kpi-brut').textContent = fmt(totalBrut) + ' €';
+  document.getElementById('comm-kpi-euk').textContent = '− ' + fmt(totalCommEuk) + ' €';
+  document.getElementById('comm-kpi-plat').textContent = '− ' + fmt(totalCommPlat) + ' €';
+  document.getElementById('comm-kpi-net').textContent = fmt(totalNet) + ' €';
+}
+
+// Init
+renderEukleia();
+renderScenarios();
+renderCommission();
+</script>
+</body>
+</html>
